@@ -1,17 +1,17 @@
-# Plano de Execução - ProjetaEscola AI (Versão Anti-Panelinha)
+# Plano de Execução - ProjetAí
 
 
 ## 1. Descrição do Problema e Usuário-Alvo
-- **Usuário-Alvo:** Professores e estudantes da Educação Básica.
+- **Usuário-Alvo:** Professores e estudantes da Educação Básica (principalmente 6º a 9ºano).
 - **Problema:** Trabalhos em grupo na escola frequentemente sofrem com dois problemas: a formação de "panelinhas" (isolando alunos e impedindo a socialização da turma) e a divisão injusta de tarefas, onde um ou dois alunos acabam sobrecarregados enquanto outros não participam.
 
 
-## 2. Entidades do Sistema (Escopo Ajustado)
+## 2. Entidades do Sistema
 1. **User:** id, nome, email, senha_hash, cargo (professor ou estudante).
 2. **Project:** id, titulo, materia, conteudo_base, professor_id (FK).
 3. **Team:** id, project_id (FK), nome_equipe.
 4. **Task:** id, team_id (FK), student_id (FK), titulo, descricao, data_entrega, status.
-5. **ChatMessage (Nova):** id, task_id (FK), sender_id (FK), message_text, timestamp (Para persistência do histórico de orientações da IA).
+5. **ChatMessage:** id, task_id (FK), sender_id (FK), message_text, timestamp (Para persistência do histórico de orientações da IA).
 
 
 ## 3. Funcionalidade de IA e Integração no Fluxo
