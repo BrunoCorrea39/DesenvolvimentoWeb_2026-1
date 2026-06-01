@@ -17,7 +17,7 @@
 ## 3. Funcionalidade de IA e Integração no Fluxo
 O sistema contará com uma IA de dupla atuação perfeitamente integrada ao fluxo:
 1. **No planejamento (Foco do Professor):** A IA analisa o tema e divide o trabalho em subtarefas de peso e complexidade equivalentes para os membros da equipe sorteada.
-2. **Na execução (Foco do Aluno):** Cada tarefa gerada terá um canal de chat direto com a IA. Esse chat funcionará como um **Tutor Socrático**. Através de engenharia de prompt no backend, a IA será instruída a nunca dar respostas prontas, mas sim fazer perguntas orientadoras, sugerir métodos de pesquisa e guiar o estudante no cumprimento daquela tarefa específica.
+2. **Na execução (Foco do Aluno):** Cada tarefa gerada terá um canal de chat direto com a IA. Esse chat funcionará como um **Tutor**. Através de engenharia de prompt no backend, a IA será instruída a nunca dar respostas prontas, mas sim fazer perguntas orientadoras, sugerir métodos de pesquisa e guiar o estudante no cumprimento daquela tarefa específica.
 
 
 ## 4. Distribuição Preliminar de Tarefas por Sprint
