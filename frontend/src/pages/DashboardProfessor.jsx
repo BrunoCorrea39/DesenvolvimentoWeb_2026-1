@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { mockAnos, mockTurmasPorAno, mockProjetosIniciais } from '../mock/dadosMockados';
+import { mockAnos, mockTurmasPorAno } from '../mock/dadosMockados'; 
 
-export default function DashboardProfessor({ onLogout }) {
+export default function DashboardProfessor({ projetos, setProjetos, onLogout }) { 
   const [menuAtivo, setMenuAtivo] = useState('turmas');
   const [janelaAtiva, setJanelaAtiva] = useState('anosHub');
   
@@ -10,7 +10,6 @@ export default function DashboardProfessor({ onLogout }) {
   const [trabalhoSelecionado, setTrabalhoSelecionado] = useState(null);
   const [grupoSelecionado, setGrupoSelecionado] = useState(null);
 
-  const [projetos, setProjetos] = useState(mockProjetosIniciais);
   const [carregandoIA, setCarregandoIA] = useState(false);
   const [tituloTrab, setTituloTrab] = useState('');
   const [conteudoTrab, setConteudoTrab] = useState('');

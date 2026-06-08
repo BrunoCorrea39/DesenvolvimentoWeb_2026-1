@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { mockProjetosIniciais } from '../mock/dadosMockados';
 
-export default function DashboardAluno({ onLogout }) {
+export default function DashboardAluno({ projetos, setProjetos, onLogout }) {
   const [menuAtivo, setMenuAtivo] = useState('Projetos');
   const [janelaAtiva, setJanelaAtiva] = useState('hub');
-  const [projetos, setProjetos] = useState(mockProjetosIniciais);
   
   const [projetoSelecionado, setProjetoSelecionado] = useState(null);
   const [grupoSelecionado, setGrupoSelecionado] = useState(null);

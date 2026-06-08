@@ -2,9 +2,11 @@ import { useState } from 'react';
 import Login from './pages/Login';
 import DashboardAluno from './pages/DashboardAluno';
 import DashboardProfessor from './pages/DashboardProfessor';
+import { mockProjetosIniciais } from './mock/dadosMockados';
 
 export default function App() {
-  const [userRole, setUserRole] = useState(null); // null = deslogado, 'aluno' ou 'professor'
+  const [userRole, setUserRole] = useState(null);
+  const [projetos, setProjetos] = useState(mockProjetosIniciais);
 
   const handleLogin = (role) => {
     setUserRole(role);
@@ -19,13 +21,27 @@ export default function App() {
     return <Login onLogin={handleLogin} />;
   }
 
-  // 2. Se logar como Aluno, mostra o Workspace com o chat socrático
+  // 2. Se logar como Aluno, passa os projetos compartilhados
   if (userRole === 'aluno') {
-    return <DashboardAluno onLogout={handleLogout} />;
+    return (
+      <DashboardAluno 
+        projetos={projetos} 
+        setProjetos={setProjetos} 
+        onLogout={handleLogout} 
+      />
+    );
   }
 
-  // 3. Se logar como Professor, mostra o Formulário de Criação com IA ativa
+  // 3. Se logar como Professor, passa os mesmos projetos compartilhados
   if (userRole === 'professor') {
-    return <DashboardProfessor onLogout={handleLogout} />;
+    return (
+      <DashboardProfessor 
+        projetos={projetos} 
+        setProjetos={setProjetos} 
+        onLogout={handleLogout} 
+      />
+    );
   }
+
+  return null;
 }
