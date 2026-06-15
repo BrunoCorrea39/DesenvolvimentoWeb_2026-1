@@ -3,14 +3,23 @@ import { useState } from 'react';
 
 export default function Login({ onLogin }) {
   const [isProfessor, setIsProfessor] = useState(false);
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [email, setEmail] = useState('aluno@escola.com');
+  const [senha, setSenha] = useState('123456');
+  const [erro, setErro] = useState('');
+  const [carregando, setCarregando] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (email && senha) {
-      // Passa para o App.jsx qual perfil logou
-      onLogin(isProfessor ? 'professor' : 'aluno');
+      setErro('');
+      setCarregando(true);
+      try {
+        await onLogin(email, senha);
+      } catch (error) {
+        setErro(error.message);
+      } finally {
+        setCarregando(false);
+      }
     }
   };
 
@@ -27,14 +36,20 @@ export default function Login({ onLogin }) {
           <button
             type="button"
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${!isProfessor ? 'bg-teal-500 text-black shadow' : 'text-slate-400 hover:text-slate-200'}`}
-            onClick={() => setIsProfessor(false)}
+            onClick={() => {
+              setIsProfessor(false);
+              setEmail('aluno@escola.com');
+            }}
           >
             Sou Aluno
           </button>
           <button
             type="button"
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${isProfessor ? 'bg-teal-500 text-black shadow' : 'text-slate-400 hover:text-slate-200'}`}
-            onClick={() => setIsProfessor(true)}
+            onClick={() => {
+              setIsProfessor(true);
+              setEmail('professor@escola.com');
+            }}
           >
             Sou Professor
           </button>
@@ -67,10 +82,17 @@ export default function Login({ onLogin }) {
 
           <button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-400 text-black font-bold py-3 rounded-xl transition-colors mt-2"
+            disabled={carregando}
+            className="w-full bg-teal-500 hover:bg-teal-400 text-black font-bold py-3 rounded-xl transition-colors mt-2 disabled:opacity-50"
           >
-            Entrar no ProjetAí
+            {carregando ? 'Entrando...' : 'Entrar no ProjetAí'}
           </button>
+
+          {erro && (
+            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+              {erro}
+            </p>
+          )}
         </form>
       </div>
     </div>

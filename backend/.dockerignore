@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+projetai.db
+*.db
+.env

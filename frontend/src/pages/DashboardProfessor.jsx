@@ -1,17 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppLayout from '../components/layout/AppLayout';
-import TeacherCalendarView from '../components/teacher/TeacherCalendarView';
+import PersonalCalendar from '../components/common/PersonalCalendar';
 import TeacherClassesView from '../components/teacher/TeacherClassesView';
 import TeacherGroupDetail from '../components/teacher/TeacherGroupDetail';
 import TeacherGroupsView from '../components/teacher/TeacherGroupsView';
 import TeacherSettingsView from '../components/teacher/TeacherSettingsView';
 import TeacherWorksView from '../components/teacher/TeacherWorksView';
 import TeacherYearsView from '../components/teacher/TeacherYearsView';
-import { mockAnos, mockTurmasPorAno } from '../mock/dadosMockados';
+import {
+  createProjectWithAI,
+  createTask,
+  deleteProject,
+  deleteTask,
+  fetchClasses,
+  fetchClassStudents,
+  resolveTaskRequest,
+  updateGroupGrade,
+  updateTask,
+  updateTaskStatus
+} from '../services/api';
 
 const MENU_ITEMS = ['turmas', 'calendário', 'configurações'];
 
-export default function DashboardProfessor({ projetos, setProjetos, onLogout }) {
+export default function DashboardProfessor({ projetos, token, currentUser, onProjectsChanged, onLogout }) {
   const [menuAtivo, setMenuAtivo] = useState('turmas');
   const [janelaAtiva, setJanelaAtiva] = useState('anosHub');
   const [anoSelecionado, setAnoSelecionado] = useState(null);
@@ -21,241 +32,181 @@ export default function DashboardProfessor({ projetos, setProjetos, onLogout }) 
   const [carregandoIA, setCarregandoIA] = useState(false);
   const [tituloTrab, setTituloTrab] = useState('');
   const [conteudoTrab, setConteudoTrab] = useState('');
+  const [numeroGrupos, setNumeroGrupos] = useState(1);
+  const [prazoTrab, setPrazoTrab] = useState('');
   const [novaTarefaNome, setNovaTarefaNome] = useState('');
   const [novaTarefaResp, setNovaTarefaResp] = useState('');
   const [tarefaChatEspiado, setTarefaChatEspiado] = useState(null);
   const [notaColetiva, setNotaColetiva] = useState('');
+  const [alunosTurma, setAlunosTurma] = useState([]);
+  const [carregandoAlunos, setCarregandoAlunos] = useState(false);
+  const [anos, setAnos] = useState([]);
 
   const trabalhoAtual = projetos.find((projeto) => projeto.id === trabalhoSelecionado?.id);
   const grupoAtual = trabalhoAtual?.grupos.find((grupo) => grupo.id === grupoSelecionado?.id);
+  const turmasDoAno = anos.find((ano) => ano.id === anoSelecionado?.id)?.turmas || [];
+
+  useEffect(() => {
+    let ativo = true;
+    fetchClasses(token)
+      .then((dados) => {
+        if (ativo) setAnos(dados);
+      })
+      .catch(() => {
+        if (ativo) setAnos([]);
+      });
+    return () => {
+      ativo = false;
+    };
+  }, [token]);
 
   const handleMenuChange = (menu) => {
     setMenuAtivo(menu);
     setJanelaAtiva('anosHub');
   };
 
-  const handleAlternarStatusProf = (projId, grupoId, tarefaId) => {
-    const ciclo = { 'A Fazer': 'Em Andamento', 'Em Andamento': 'Concluído', 'Concluído': 'A Fazer' };
-
-    setProjetos(
-      projetos.map((projeto) => {
-        if (projeto.id !== projId) return projeto;
-
-        return {
-          ...projeto,
-          grupos: projeto.grupos.map((grupo) => {
-            if (grupo.id !== grupoId) return grupo;
-
-            return {
-              ...grupo,
-              tarefas: grupo.tarefas.map((tarefa) =>
-                tarefa.id === tarefaId ? { ...tarefa, status: ciclo[tarefa.status] } : tarefa
-              )
-            };
-          })
-        };
-      })
-    );
+  const carregarAlunosDaTurma = async (turmaId) => {
+    setCarregandoAlunos(true);
+    try {
+      const alunos = await fetchClassStudents(token, turmaId);
+      setAlunosTurma(alunos);
+    } catch (error) {
+      setAlunosTurma([]);
+      alert(error.message);
+    } finally {
+      setCarregandoAlunos(false);
+    }
   };
 
-  const handleNotaIndividual = (projId, grupoId, tarefaId, notaValor) => {
-    setProjetos(
-      projetos.map((projeto) => {
-        if (projeto.id !== projId) return projeto;
-
-        return {
-          ...projeto,
-          grupos: projeto.grupos.map((grupo) => {
-            if (grupo.id !== grupoId) return grupo;
-
-            return {
-              ...grupo,
-              tarefas: grupo.tarefas.map((tarefa) =>
-                tarefa.id === tarefaId ? { ...tarefa, nota: notaValor ? Number(notaValor) : null } : tarefa
-              )
-            };
-          })
-        };
-      })
-    );
+  const handleAlternarStatusProf = async (_projId, _grupoId, tarefaId) => {
+    try {
+      await updateTaskStatus(token, tarefaId);
+      await onProjectsChanged();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const gerenciarSolicitacao = (projId, grupoId, solId, aprovar) => {
-    setProjetos(
-      projetos.map((projeto) => {
-        if (projeto.id !== projId) return projeto;
-
-        return {
-          ...projeto,
-          grupos: projeto.grupos.map((grupo) => {
-            if (grupo.id !== grupoId) return grupo;
-
-            const solicitacao = grupo.solicitacoesTarefas.find((item) => item.id === solId);
-            const tarefas = [...grupo.tarefas];
-            if (aprovar && solicitacao) {
-              tarefas.push({
-                id: Date.now(),
-                titulo: `[Aprovado] ${solicitacao.titulo}`,
-                descricao: solicitacao.descricao,
-                responsavel: solicitacao.responsavel,
-                status: 'A Fazer',
-                prazo: 'Definido por Prof',
-                nota: null,
-                chatHistory: []
-              });
-            }
-
-            return {
-              ...grupo,
-              solicitacoesTarefas: grupo.solicitacoesTarefas.filter((item) => item.id !== solId),
-              tarefas
-            };
-          })
-        };
-      })
-    );
+  const handleNotaIndividual = async (_projId, _grupoId, tarefaId, notaValor) => {
+    try {
+      await updateTask(token, tarefaId, { nota: notaValor ? Number(notaValor) : null });
+      await onProjectsChanged();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const handleMudarResponsavel = (projId, grupoId, tarefaId, novoDono) => {
-    setProjetos(
-      projetos.map((projeto) => {
-        if (projeto.id !== projId) return projeto;
-
-        return {
-          ...projeto,
-          grupos: projeto.grupos.map((grupo) => {
-            if (grupo.id !== grupoId) return grupo;
-
-            return {
-              ...grupo,
-              tarefas: grupo.tarefas.map((tarefa) =>
-                tarefa.id === tarefaId ? { ...tarefa, responsavel: novoDono } : tarefa
-              )
-            };
-          })
-        };
-      })
-    );
+  const gerenciarSolicitacao = async (_projId, _grupoId, solId, aprovar) => {
+    try {
+      await resolveTaskRequest(token, solId, aprovar);
+      await onProjectsChanged();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const handleExcluirTarefa = (projId, grupoId, tarefaId) => {
-    setProjetos(
-      projetos.map((projeto) => {
-        if (projeto.id !== projId) return projeto;
-
-        return {
-          ...projeto,
-          grupos: projeto.grupos.map((grupo) =>
-            grupo.id === grupoId ? { ...grupo, tarefas: grupo.tarefas.filter((tarefa) => tarefa.id !== tarefaId) } : grupo
-          )
-        };
-      })
-    );
+  const handleMudarResponsavel = async (_projId, _grupoId, tarefaId, novoDono) => {
+    try {
+      await updateTask(token, tarefaId, { responsavel: novoDono });
+      await onProjectsChanged();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const handleAdicionarTarefaManual = (event, projId, grupoId) => {
+  const handleExcluirTarefa = async (_projId, _grupoId, tarefaId) => {
+    try {
+      await deleteTask(token, tarefaId);
+      await onProjectsChanged();
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleAdicionarTarefaManual = async (event, _projId, grupoId) => {
     event.preventDefault();
     if (!novaTarefaNome.trim() || !novaTarefaResp) return;
 
-    const novaTarefa = {
-      id: Date.now(),
-      titulo: novaTarefaNome,
+    try {
+      await createTask(token, grupoId, {
+        titulo: novaTarefaNome,
       descricao: 'Inclusão manual do professor.',
       responsavel: novaTarefaResp,
-      status: 'A Fazer',
-      prazo: 'A combinar',
-      nota: null,
-      chatHistory: []
-    };
-
-    setProjetos(
-      projetos.map((projeto) => {
-        if (projeto.id !== projId) return projeto;
-
-        return {
-          ...projeto,
-          grupos: projeto.grupos.map((grupo) =>
-            grupo.id === grupoId ? { ...grupo, tarefas: [...grupo.tarefas, novaTarefa] } : grupo
-          )
-        };
-      })
-    );
-    setNovaTarefaNome('');
+        prazo: 'A combinar'
+      });
+      await onProjectsChanged();
+      setNovaTarefaNome('');
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const handleCriarTrabalhoIA = (event) => {
+  const handleCriarTrabalhoIA = async (event) => {
     event.preventDefault();
     if (!tituloTrab || !conteudoTrab) return;
 
     setCarregandoIA(true);
-    setTimeout(() => {
-      const novoTrabalho = {
-        id: Date.now(),
+    try {
+      await createProjectWithAI(token, {
         turmaId: turmaSelecionada.id,
         titulo: tituloTrab,
-        materia: 'História',
         conteudo: conteudoTrab,
-        grupos: [
-          {
-            id: `g_v4_${Date.now()}`,
-            nome: 'Grupo 1 - Gerado por IA',
-            integrantes: ['Guilherme', 'Sophia', 'Lucas'],
-            progresso: 0,
-            notaColetiva: null,
-            solicitacoesTarefas: [],
-            tarefas: [
-              {
-                id: Date.now() + 5,
-                titulo: 'Pesquisa Temática',
-                responsavel: 'Guilherme',
-                status: 'A Fazer',
-                prazo: '10/06',
-                nota: null,
-                chatHistory: []
-              }
-            ]
-          }
-        ]
-      };
-
-      setProjetos((projetosAtuais) => [novoTrabalho, ...projetosAtuais]);
+        numeroGrupos,
+        prazo: prazoTrab || null
+      });
+      await onProjectsChanged();
+      await carregarAlunosDaTurma(turmaSelecionada.id);
       setTituloTrab('');
       setConteudoTrab('');
+      setNumeroGrupos(1);
+      setPrazoTrab('');
+    } catch (error) {
+      alert(error.message);
+    } finally {
       setCarregandoIA(false);
-    }, 1200);
+    }
   };
 
-  const handleSalvarNotasColetiva = (projId, grupoId) => {
-    setProjetos(
-      projetos.map((projeto) => {
-        if (projeto.id !== projId) return projeto;
+  const handleExcluirTrabalho = async (trabalho) => {
+    if (!window.confirm(`Excluir o trabalho "${trabalho.titulo}"? Esta ação não pode ser desfeita.`)) return;
 
-        return {
-          ...projeto,
-          grupos: projeto.grupos.map((grupo) =>
-            grupo.id === grupoId ? { ...grupo, notaColetiva: notaColetiva ? Number(notaColetiva) : grupo.notaColetiva } : grupo
-          )
-        };
-      })
-    );
-    alert('Nota do grupo salva!');
+    try {
+      await deleteProject(token, trabalho.id);
+      await onProjectsChanged();
+      if (trabalhoSelecionado?.id === trabalho.id) {
+        setTrabalhoSelecionado(null);
+        setJanelaAtiva('trabalhosHub');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleSalvarNotasColetiva = async (_projId, grupoId) => {
+    try {
+      await updateGroupGrade(token, grupoId, Number(notaColetiva));
+      await onProjectsChanged();
+      alert('Nota do grupo salva!');
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
     <AppLayout
-      profile={{ initials: 'PF', name: 'Prof. Fernando', subtitle: 'História' }}
+      profile={{ initials: 'PF', name: currentUser?.name || 'Prof. Fernando', subtitle: currentUser?.subject || 'História' }}
       menuItems={MENU_ITEMS}
       activeMenu={menuAtivo}
       onMenuChange={handleMenuChange}
       onLogout={onLogout}
       accent="purple"
     >
-      {menuAtivo === 'calendário' && <TeacherCalendarView />}
+      {menuAtivo === 'calendário' && <PersonalCalendar token={token} accent="purple" titulo="Agenda do Professor" projetos={projetos} />}
       {menuAtivo === 'configurações' && <TeacherSettingsView />}
 
       {menuAtivo === 'turmas' && janelaAtiva === 'anosHub' && (
         <TeacherYearsView
-          anos={mockAnos}
+          anos={anos}
           onSelectAno={(ano) => {
             setAnoSelecionado(ano);
             setJanelaAtiva('turmasHub');
@@ -266,11 +217,13 @@ export default function DashboardProfessor({ projetos, setProjetos, onLogout }) 
       {menuAtivo === 'turmas' && janelaAtiva === 'turmasHub' && (
         <TeacherClassesView
           anoSelecionado={anoSelecionado}
-          turmas={mockTurmasPorAno[anoSelecionado?.id] || []}
+          turmas={turmasDoAno}
           onBack={() => setJanelaAtiva('anosHub')}
-          onSelectTurma={(turma) => {
+          onSelectTurma={async (turma) => {
             setTurmaSelecionada(turma);
+            setAlunosTurma([]);
             setJanelaAtiva('trabalhosHub');
+            await carregarAlunosDaTurma(turma.id);
           }}
         />
       )}
@@ -281,15 +234,22 @@ export default function DashboardProfessor({ projetos, setProjetos, onLogout }) 
           projetos={projetos}
           tituloTrab={tituloTrab}
           conteudoTrab={conteudoTrab}
+          numeroGrupos={numeroGrupos}
+          prazoTrab={prazoTrab}
           carregandoIA={carregandoIA}
+          alunosTurma={alunosTurma}
+          carregandoAlunos={carregandoAlunos}
           onBack={() => setJanelaAtiva('turmasHub')}
           onTituloChange={setTituloTrab}
           onConteudoChange={setConteudoTrab}
+          onNumeroGruposChange={setNumeroGrupos}
+          onPrazoChange={setPrazoTrab}
           onCreateWork={handleCriarTrabalhoIA}
           onSelectTrabalho={(trabalho) => {
             setTrabalhoSelecionado(trabalho);
             setJanelaAtiva('gruposHub');
           }}
+          onDeleteWork={handleExcluirTrabalho}
         />
       )}
 
