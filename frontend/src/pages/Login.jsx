@@ -15,10 +15,10 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-md shadow-xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">Projet<span className="text-teal-400">Aí</span></h1>
+          <h1 className="text-3xl font-bold text-slate-200">Projet<span className="text-teal-400">Aí</span></h1>
           <p className="text-slate-400 mt-2">Gestão justa de trabalhos escolares</p>
         </div>
 
@@ -26,14 +26,14 @@ export default function Login({ onLogin }) {
         <div className="flex bg-slate-950 p-1 rounded-xl mb-6 border border-slate-800">
           <button
             type="button"
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${!isProfessor ? 'bg-teal-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'}`}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${!isProfessor ? 'bg-teal-500 text-black shadow' : 'text-slate-400 hover:text-slate-200'}`}
             onClick={() => setIsProfessor(false)}
           >
             Sou Aluno
           </button>
           <button
             type="button"
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${isProfessor ? 'bg-teal-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'}`}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${isProfessor ? 'bg-teal-500 text-black shadow' : 'text-slate-400 hover:text-slate-200'}`}
             onClick={() => setIsProfessor(true)}
           >
             Sou Professor
@@ -47,7 +47,7 @@ export default function Login({ onLogin }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-teal-500 transition-colors"
               placeholder="seuemail@escola.com"
               required
             />
@@ -59,7 +59,7 @@ export default function Login({ onLogin }) {
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-teal-500 transition-colors"
               placeholder="••••••••"
               required
             />
@@ -67,7 +67,7 @@ export default function Login({ onLogin }) {
 
           <button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold py-3 rounded-xl transition-colors mt-2"
+            className="w-full bg-teal-500 hover:bg-teal-400 text-black font-bold py-3 rounded-xl transition-colors mt-2"
           >
             Entrar no ProjetAí
           </button>
