@@ -23,7 +23,7 @@ export default function AppLayout({
   const styles = accentStyles[accent];
 
   return (
-    <div className="min-h-screen bg-white text-slate-200 flex">
+    <div className="min-h-screen bg-slate-950 text-slate-200 flex">
       <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between shadow-sm">
         <div>
           <div className="p-6 border-b border-slate-800 flex items-center gap-3">
@@ -58,7 +58,7 @@ export default function AppLayout({
           <button
             type="button"
             onClick={onLogout}
-            className="w-full bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200 px-4 py-2 rounded-xl text-sm"
+            className="w-full bg-slate-950 border border-slate-800 text-slate-400 hover:bg-red-500/10 hover:border-red-500 hover:text-red-500 px-4 py-2 rounded-xl text-sm transition-colors"
           >
             Sair
           </button>

@@ -140,18 +140,18 @@ export default function TeacherWorksView({
               <div
                 key={projeto.id}
                 onClick={() => onSelectTrabalho(projeto)}
-                className="bg-slate-900 border border-slate-800 p-5 rounded-xl cursor-pointer hover:border-slate-700 transition-all flex justify-between items-center gap-3"
+                className="bg-slate-900 border border-slate-800 p-5 rounded-xl cursor-pointer hover:bg-purple-500 hover:border-purple-500 transition-all flex justify-between items-center gap-3"
               >
                 <h5 className="font-bold text-sm text-slate-200">{projeto.titulo}</h5>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-purple-400 font-semibold">{projeto.grupos.length} Grupos</span>
+                  <span className="text-xs font-bold">{projeto.grupos.length} Grupos</span>
                   <button
                     type="button"
                     onClick={(event) => {
                       event.stopPropagation();
                       onDeleteWork(projeto);
                     }}
-                    className="text-xs font-semibold text-red-400 hover:text-red-300"
+                    className="text-xs font-semibold text-red-500 bg-red-500/10 border border-red-500/30 rounded-md px-2 py-0.5 hover:bg-red-500/20"
                   >
                     Excluir
                   </button>

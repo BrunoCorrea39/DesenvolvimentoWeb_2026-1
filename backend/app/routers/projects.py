@@ -1,5 +1,4 @@
 import random
-import unicodedata
 from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -20,6 +19,7 @@ from ..schemas import (
 )
 from ..services import (
     STATUS_CYCLE,
+    class_name_matches,
     generate_ai_tasks,
     generate_tutor_response,
     generated_group_id,
@@ -31,28 +31,6 @@ from ..services import (
 
 
 router = APIRouter(prefix="/projects", tags=["projects"])
-
-
-def normalize_class_name(value: str | None) -> str:
-    stripped = (value or "").replace("º", "").replace("ª", "").replace("°", "")
-    normalized = unicodedata.normalize("NFKD", stripped)
-    without_marks = "".join(char for char in normalized if not unicodedata.combining(char))
-    return "".join(char.lower() for char in without_marks if char.isalnum())
-
-
-def class_name_matches(class_id: str, class_name: str | None) -> bool:
-    normalized_class = normalize_class_name(class_name)
-    normalized_id = normalize_class_name(class_id)
-    if not normalized_class or not normalized_id:
-        return False
-
-    year = "".join(char for char in normalized_id if char.isdigit())
-    letter = "".join(char for char in normalized_id if char.isalpha())
-    candidates = {normalized_id}
-    if year and letter:
-        candidates.add(f"{year}ano{letter}")
-
-    return any(candidate == normalized_class for candidate in candidates)
 
 
 @router.get("")

@@ -1,5 +1,6 @@
 import json
 import sys
+import unicodedata
 from datetime import date
 from json import JSONDecodeError
 from urllib.error import HTTPError, URLError
@@ -18,6 +19,28 @@ STATUS_CYCLE = {
     "Em Andamento": "Concluído",
     "Concluído": "A Fazer",
 }
+
+
+def normalize_class_name(value: str | None) -> str:
+    stripped = (value or "").replace("º", "").replace("ª", "").replace("°", "")
+    normalized = unicodedata.normalize("NFKD", stripped)
+    without_marks = "".join(char for char in normalized if not unicodedata.combining(char))
+    return "".join(char.lower() for char in without_marks if char.isalnum())
+
+
+def class_name_matches(class_id: str, class_name: str | None) -> bool:
+    normalized_class = normalize_class_name(class_name)
+    normalized_id = normalize_class_name(class_id)
+    if not normalized_class or not normalized_id:
+        return False
+
+    year = "".join(char for char in normalized_id if char.isdigit())
+    letter = "".join(char for char in normalized_id if char.isalpha())
+    candidates = {normalized_id}
+    if year and letter:
+        candidates.add(f"{year}ano{letter}")
+
+    return any(candidate == normalized_class for candidate in candidates)
 
 
 def members_to_json(members: list[str]) -> str:
@@ -112,7 +135,15 @@ def project_to_frontend(session: Session, project: Project, only_member: str | N
 
 def list_projects_for_user(session: Session, user: User) -> list[dict]:
     projects = session.exec(select(Project).order_by(Project.id)).all()
-    only_member = user.name if user.role == "aluno" else None
+    if user.role == "aluno":
+        projects = [
+            project
+            for project in projects
+            if class_name_matches(project.class_id, user.class_name)
+        ]
+        only_member = user.name
+    else:
+        only_member = None
     serialized = [project_to_frontend(session, project, only_member) for project in projects]
     return [project for project in serialized if project]
 

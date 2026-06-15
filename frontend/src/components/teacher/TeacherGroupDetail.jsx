@@ -38,18 +38,22 @@ export default function TeacherGroupDetail({
                 <div>
                   <h5 className="font-bold text-sm text-slate-200">{tarefa.titulo}</h5>
                   <div className="flex gap-4 text-xs text-slate-500 mt-1">
-                    <span>
-                      Status:{' '}
+                    <span className="flex items-center gap-1">
+                      Status:
                       <button
                         type="button"
                         onClick={() => onToggleStatus(projeto.id, grupo.id, tarefa.id)}
-                        className="text-purple-400 hover:underline font-bold"
+                        className="text-purple-400 font-bold bg-slate-950 border border-slate-800 rounded-md px-2 py-0.5"
                       >
                         {tarefa.status} ⇄
                       </button>
                     </span>
                     {tarefa.chatHistory?.length > 0 && (
-                      <button type="button" onClick={() => onEspiarChat(tarefa)} className="text-teal-400 hover:underline font-medium">
+                      <button
+                        type="button"
+                        onClick={() => onEspiarChat(tarefa)}
+                        className="text-teal-400 font-bold bg-slate-950 border border-slate-800 rounded-md px-2 py-0.5"
+                      >
                         Espiar Chat
                       </button>
                     )}
@@ -61,7 +65,7 @@ export default function TeacherGroupDetail({
                     type="number"
                     placeholder={tarefa.nota !== null ? String(tarefa.nota) : 'Nota Aluno'}
                     onChange={(event) => onNotaIndividual(projeto.id, grupo.id, tarefa.id, event.target.value)}
-                    className="w-20 bg-slate-950 border border-slate-800 rounded p-1 text-xs text-center text-teal-400"
+                    className="w-28 bg-slate-950 border border-slate-800 rounded p-1 text-xs text-center text-teal-400 placeholder:text-slate-500"
                   />
                   <select
                     value={tarefa.responsavel}
@@ -78,7 +82,7 @@ export default function TeacherGroupDetail({
                   <button
                     type="button"
                     onClick={() => onExcluirTarefa(projeto.id, grupo.id, tarefa.id)}
-                    className="text-rose-400 text-xs bg-rose-500/10 p-1.5 rounded border border-rose-500/20"
+                    className="text-red-500 text-xs font-semibold bg-red-500/10 p-1.5 rounded border border-red-500/30 hover:bg-red-500/20"
                   >
                     Excluir
                   </button>
@@ -97,7 +101,7 @@ export default function TeacherGroupDetail({
               onChange={(event) => onNovaTarefaNomeChange(event.target.value)}
               placeholder="Inserir tarefa manual..."
               required
-              className="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-2"
+              className="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-300 placeholder:text-slate-500"
             />
             <select
               value={novaTarefaResp}
@@ -133,14 +137,14 @@ export default function TeacherGroupDetail({
                     <button
                       type="button"
                       onClick={() => onGerenciarSolicitacao(projeto.id, grupo.id, solicitacao.id, false)}
-                      className="flex-1 bg-rose-500/10 text-rose-400 p-1 rounded text-[10px] font-bold"
+                      className="flex-1 bg-rose-500/10 text-slate-200 p-1 rounded text-[10px] font-bold"
                     >
                       Recusar
                     </button>
                     <button
                       type="button"
                       onClick={() => onGerenciarSolicitacao(projeto.id, grupo.id, solicitacao.id, true)}
-                      className="flex-1 bg-emerald-500/10 text-emerald-400 p-1 rounded text-[10px] font-bold"
+                      className="flex-1 bg-emerald-500/10 text-slate-200 p-1 rounded text-[10px] font-bold"
                     >
                       Aprovar
                     </button>
@@ -150,22 +154,6 @@ export default function TeacherGroupDetail({
             )}
           </div>
 
-          {tarefaChatEspiado && (
-            <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl h-[200px] flex flex-col shadow">
-              <h5 className="text-xs font-bold text-teal-400 mb-2 pb-1 border-b border-slate-800">
-                Chat de: {tarefaChatEspiado.responsavel}
-              </h5>
-              <div className="flex-1 overflow-y-auto space-y-1.5 text-[11px]">
-                {tarefaChatEspiado.chatHistory?.map((mensagem) => (
-                  <div key={mensagem.id} className="bg-slate-950 p-1.5 rounded">
-                    <strong className="text-purple-400">{mensagem.sender}: </strong>
-                    {mensagem.text}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
             <h4 className="font-bold text-xs uppercase text-slate-400">Atribuir Nota Coletiva</h4>
             <input
@@ -173,7 +161,7 @@ export default function TeacherGroupDetail({
               placeholder="Nota 0-10"
               value={notaColetiva}
               onChange={(event) => onNotaColetivaChange(event.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-center text-teal-400 font-bold"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-center text-teal-400 font-bold placeholder:text-slate-500"
             />
             <button
               type="button"
@@ -185,6 +173,38 @@ export default function TeacherGroupDetail({
           </div>
         </div>
       </div>
+
+      {tarefaChatEspiado && (
+        <div className="mt-6 bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow">
+          <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800">
+            <h5 className="text-xs font-bold text-teal-400">Chat de: {tarefaChatEspiado.responsavel}</h5>
+            <button
+              type="button"
+              onClick={() => onEspiarChat(null)}
+              className="text-xs font-semibold text-slate-400 hover:text-slate-200"
+            >
+              Fechar
+            </button>
+          </div>
+          <div className="max-h-[260px] overflow-y-auto space-y-1.5 text-xs">
+            {tarefaChatEspiado.chatHistory?.map((mensagem) => (
+              <div
+                key={mensagem.id}
+                className={`p-2 rounded border ${
+                  mensagem.sender === 'aluno'
+                    ? 'bg-teal-500/10 border-teal-500/30'
+                    : 'bg-slate-950 border-slate-800'
+                }`}
+              >
+                <strong className={mensagem.sender === 'aluno' ? 'text-teal-400' : 'text-purple-400'}>
+                  {mensagem.sender}:{' '}
+                </strong>
+                {mensagem.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function TeacherClassesView({ anoSelecionado, turmas, onBack, onS
           <div
             key={turma.id}
             onClick={() => onSelectTurma(turma)}
-            className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:border-purple-500/40 transition-all shadow-md"
+            className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:bg-purple-500 hover:border-purple-500 transition-all shadow-md"
           >
             <h4 className="text-base font-bold text-slate-200">{turma.nome}</h4>
           </div>

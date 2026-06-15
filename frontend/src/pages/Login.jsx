@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 export default function Login({ onLogin }) {
   const [isProfessor, setIsProfessor] = useState(false);
-  const [email, setEmail] = useState('aluno@escola.com');
+  const [email, setEmail] = useState('aluno14a@escola.com');
   const [senha, setSenha] = useState('123456');
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
@@ -24,7 +24,7 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-md shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-200">Projet<span className="text-teal-400">Aí</span></h1>
@@ -38,7 +38,7 @@ export default function Login({ onLogin }) {
             className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${!isProfessor ? 'bg-teal-500 text-black shadow' : 'text-slate-400 hover:text-slate-200'}`}
             onClick={() => {
               setIsProfessor(false);
-              setEmail('aluno@escola.com');
+              setEmail('aluno14a@escola.com');
             }}
           >
             Sou Aluno

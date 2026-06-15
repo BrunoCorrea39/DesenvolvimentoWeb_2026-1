@@ -14,7 +14,7 @@ export default function TeacherGroupsView({ trabalho, grupos, onBack, onSelectGr
           <div
             key={grupo.id}
             onClick={() => onSelectGrupo(grupo)}
-            className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:border-purple-500/40 transition-all shadow-md"
+            className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:bg-purple-500 hover:border-purple-500 transition-all shadow-md"
           >
             <h4 className="text-base font-bold text-slate-200">{grupo.nome}</h4>
             <p className="text-xs text-slate-500 mt-1">Alunos: {grupo.integrantes.join(', ')}</p>

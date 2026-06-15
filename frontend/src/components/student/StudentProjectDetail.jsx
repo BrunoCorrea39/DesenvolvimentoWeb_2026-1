@@ -48,20 +48,21 @@ export default function StudentProjectDetail({
                 .map((tarefa) => (
                   <div
                     key={tarefa.id}
-                    className="bg-slate-950 border border-slate-800 p-4 rounded-xl shadow-sm flex flex-col justify-between min-h-[120px]"
+                    onClick={() => onOpenTask(tarefa)}
+                    className="group bg-slate-950 border border-slate-800 p-4 rounded-xl shadow-sm flex flex-col justify-between min-h-[120px] cursor-pointer hover:bg-purple-500 hover:border-purple-500 transition-all"
                   >
                     <div>
                       <div className="flex justify-between items-start gap-2">
-                        <h5
-                          onClick={() => onOpenTask(tarefa)}
-                          className="font-bold text-sm text-slate-200 cursor-pointer hover:text-teal-400 transition-colors line-clamp-1"
-                        >
+                        <h5 className="font-bold text-sm text-slate-200 transition-colors line-clamp-1">
                           {tarefa.titulo}
                         </h5>
                         <button
                           type="button"
-                          onClick={() => onStatusChange(projeto.id, grupo.id, tarefa.id, tarefa.responsavel)}
-                          className="text-[10px] text-slate-500 hover:text-teal-400 border border-slate-800 px-1 rounded"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onStatusChange(projeto.id, grupo.id, tarefa.id, tarefa.responsavel);
+                          }}
+                          className="text-[10px] text-slate-500 hover:text-black border border-slate-800 px-1 rounded"
                         >
                           ⇄
                         </button>
@@ -79,7 +80,7 @@ export default function StudentProjectDetail({
                         Prazo: <strong className="text-rose-400 font-medium">{tarefa.prazo}</strong>
                       </span>
                       {tarefa.nota !== null && (
-                        <span className="font-bold bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                        <span className="font-bold bg-emerald-500/10 text-slate-200 px-1.5 py-0.5 rounded border border-emerald-500/20">
                           Nota: {tarefa.nota}
                         </span>
                       )}

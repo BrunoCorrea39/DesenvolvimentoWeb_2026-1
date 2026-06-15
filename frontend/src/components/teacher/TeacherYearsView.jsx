@@ -7,7 +7,7 @@ export default function TeacherYearsView({ anos, onSelectAno }) {
           <div
             key={ano.id}
             onClick={() => onSelectAno(ano)}
-            className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:border-purple-500/40 transition-all shadow-md"
+            className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:bg-purple-500 hover:border-purple-500 transition-all shadow-md"
           >
             <h4 className="text-lg font-bold text-slate-200">{ano.nome}</h4>
           </div>

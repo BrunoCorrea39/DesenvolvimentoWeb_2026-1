@@ -11,12 +11,12 @@ export default function StudentProjectsView({ projetos, meuNome, onOpenProject }
             <div
               key={projeto.id}
               onClick={() => onOpenProject(projeto, meuGrupo)}
-              className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:border-teal-500/40 transition-all shadow-md group"
+              className="bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer hover:bg-purple-500 hover:border-purple-500 transition-all shadow-md"
             >
-              <span className="text-xs font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded">
+              <span className="text-xs font-bold text-slate-200 bg-teal-500/10 px-2 py-0.5 rounded">
                 {projeto.materia}
               </span>
-              <h4 className="text-lg font-bold mt-2 group-hover:text-teal-400 transition-colors">
+              <h4 className="text-lg font-bold mt-2">
                 {projeto.titulo}
               </h4>
               <div className="mt-4 pt-4 border-t border-slate-800/50 flex justify-between items-center text-xs text-slate-500">

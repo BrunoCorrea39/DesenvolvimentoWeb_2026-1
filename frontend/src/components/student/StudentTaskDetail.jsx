@@ -20,29 +20,7 @@ export default function StudentTaskDetail({
       <BackButton onClick={onBack}>← Voltar</BackButton>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl h-fit space-y-4 shadow-md">
-          <div>
-            <span className="text-[10px] text-teal-400 font-bold uppercase tracking-wider">Visualizando Tarefa</span>
-            <h3 className="text-xl font-bold text-slate-200 mt-0.5">{tarefa.titulo}</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Responsável: <strong className="text-slate-200">{tarefa.responsavel}</strong>
-            </p>
-          </div>
-          <p className="text-xs text-slate-400 bg-slate-950 p-4 rounded-xl border border-slate-800 leading-relaxed">
-            {tarefa.descricao}
-          </p>
-          <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between text-xs">
-            <span className="text-slate-500">Data Limite:</span>
-            <span className="text-rose-400 font-bold">{tarefa.prazo}</span>
-          </div>
-          {!eDonoDaTarefa && (
-            <div className="bg-amber-500/10 border border-amber-500/20 text-amber-400 p-3 rounded-xl text-[11px] text-center font-medium">
-              Modo de Leitura. Tarefa de <strong>{tarefa.responsavel}</strong>.
-            </div>
-          )}
-        </div>
-
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col h-[480px] shadow-xl">
+        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col h-[480px] lg:h-[calc(100vh-6rem)] shadow-xl">
           <div className="p-4 bg-slate-950 border-b border-slate-800 rounded-t-2xl flex items-center justify-between">
             <span className="font-bold text-xs text-slate-300">Histórico de Tutoria IA</span>
           </div>
@@ -75,6 +53,28 @@ export default function StudentTaskDetail({
               Enviar
             </button>
           </form>
+        </div>
+
+        <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl h-fit space-y-4 shadow-md">
+          <div>
+            <span className="text-[10px] text-teal-400 font-bold uppercase tracking-wider">Visualizando Tarefa</span>
+            <h3 className="text-xl font-bold text-slate-200 mt-0.5">{tarefa.titulo}</h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Responsável: <strong className="text-slate-200">{tarefa.responsavel}</strong>
+            </p>
+          </div>
+          <p className="text-xs text-slate-400 bg-slate-950 p-4 rounded-xl border border-slate-800 leading-relaxed">
+            {tarefa.descricao}
+          </p>
+          <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between text-xs">
+            <span className="text-slate-500">Data Limite:</span>
+            <span className="text-rose-400 font-bold">{tarefa.prazo}</span>
+          </div>
+          {!eDonoDaTarefa && (
+            <div className="bg-amber-500/10 border border-amber-500/20 text-slate-200 p-3 rounded-xl text-[11px] text-center font-medium">
+              Modo de Leitura. Tarefa de <strong>{tarefa.responsavel}</strong>.
+            </div>
+          )}
         </div>
       </div>
     </div>

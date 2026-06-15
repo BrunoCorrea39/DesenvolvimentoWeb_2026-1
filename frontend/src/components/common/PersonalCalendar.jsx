@@ -4,8 +4,8 @@ import { createCalendarEvent, deleteCalendarEvent, fetchCalendarEvents } from '.
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
 const ACENTOS = {
-  purple: { botao: 'bg-purple-600', texto: 'text-purple-400', badge: 'bg-purple-500/10 border-purple-500/20 text-purple-400' },
-  teal: { botao: 'bg-teal-500', texto: 'text-teal-400', badge: 'bg-teal-500/10 border-teal-500/20 text-teal-400' }
+  purple: { botao: 'bg-purple-600', texto: 'text-purple-400', badge: 'bg-purple-500/10 border-purple-500/20 text-slate-200' },
+  teal: { botao: 'bg-teal-500', texto: 'text-teal-400', badge: 'bg-teal-500/10 border-teal-500/20 text-slate-200' }
 };
 
 function formatarData(iso) {
@@ -43,7 +43,7 @@ export default function PersonalCalendar({ token, accent = 'purple', titulo = 'M
       .then((dados) => {
         if (ativo) setEventos(dados);
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => {
         if (ativo) setCarregando(false);
       });
@@ -148,10 +148,10 @@ export default function PersonalCalendar({ token, accent = 'purple', titulo = 'M
 
           {itens.map((item) => {
             const { dia, mes } = formatarData(item.date);
-            const badge = item.tipo === 'trabalho' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : cores.badge;
+            const badge = item.tipo === 'trabalho' ? 'bg-rose-500/10 border-rose-500/20 text-slate-200' : cores.badge;
             return (
               <div key={item.key} className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
-                <div className={`border p-3 rounded-lg font-bold text-center w-14 shrink-0 ${badge}`}>
+                <div className={`border p-3 rounded-lg font-bold text-slate-200 text-center w-14 shrink-0 ${badge}`}>
                   {dia} <span className="block text-[10px] uppercase font-medium">{mes}</span>
                 </div>
                 <div className="min-w-0 flex-1">

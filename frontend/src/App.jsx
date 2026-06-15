@@ -75,7 +75,7 @@ export default function App() {
 
   if (carregando && projetos.length === 0) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center text-sm text-slate-400">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-sm text-slate-400">
         Carregando dados da API...
       </div>
     );
@@ -83,7 +83,7 @@ export default function App() {
 
   if (erro) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
         <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md text-center space-y-3">
           <h1 className="font-bold text-slate-200">Não foi possível carregar a API</h1>
           <p className="text-sm text-slate-400">{erro}</p>
