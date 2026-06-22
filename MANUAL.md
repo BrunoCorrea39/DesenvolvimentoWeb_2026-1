@@ -22,6 +22,7 @@ Para realizar consultas pontuais e testes imediatos no ambiente de homologação
 | **Aluno** | `aluno(XX)(TURMA)@escola.com` | `123456` |
 
 XX - Número do aluno (de 01 a 20).
+
 TURMA - **a** ou **b**.
 
 ---
