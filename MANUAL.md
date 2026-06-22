@@ -38,7 +38,7 @@ TURMA - **a** ou **b**.
 
 ---
 
-## 👨‍🎓 3. Painel do Aluno: Kanban e o Tutor Socrático
+## 👨‍🎓 3. Painel do Aluno: Kanban e o Tutor IA
 *Fluxo focado no avanço de atividades e resolução autônoma de dúvidas em contexto.*
 
 ### Etapas concretas para execução da tarefa:
