@@ -2,7 +2,7 @@
 
 **Disciplina:** Desenvolvimento de Aplicações Web (DWC08A) — UTFPR  
 **Professor:** Luiz Rodrigues  
-**Ambiente de Produção:** `https://seu-link-customizado.vercel.app`
+**Ambiente de Produção:** `https://projetai-utfpr.vercel.app/`
 
 ---
 
