@@ -149,5 +149,6 @@ Nenhuma chave ou segredo fica versionado no repositório — todas as credenciai
 - Aluno conversa com tutor IA dentro da tarefa.
 - Endpoints protegidos por perfil de usuário.
 
-## Link do Pitch
-https://gamma.app/docs/Pitch-ProjetAi-gc18ltj11cyf8pc?mode=doc
+## Links
+* Pitch: https://gamma.app/docs/Pitch-ProjetAi-gc18ltj11cyf8pc?mode=doc
+* App: https://projetai-utfpr.vercel.app/
