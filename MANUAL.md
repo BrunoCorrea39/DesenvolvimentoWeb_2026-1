@@ -35,7 +35,7 @@ TURMA - **a** ou **b**.
 2. **Escolha a série e turma desejada**: Na dashboard haverá as séries (8º, 9º ano, etc) e dentro das séries as turmas geridas pelo professor (9º ano A, 9º an0 B, etc). Selecione a turma desejada.
 3. **Acompanhamento da turma**: Dentro da turma será possível vizualizar os alunos matriculados e os projetos já em andamento.  
 4. **Gerar trabalho:** Na dashboard da turma, do lado esquerdo, está o campo para iniciar um novo projeto.
-5. **Defina os Parâmetros:** No formulário , preencha o campo **Tema/Título** (Ex: *“Impactos da Revolução Industrial”*), estipule a quantidade de **Alunos por grupo**, dê as diretrizes do projeto e defina o prazo de entrega.
+5. **Defina os Parâmetros:** No formulário , preencha o campo **Tema/Título** (Ex: *“Impactos da Revolução Industrial”*), estipule a quantidade de grupos, dê as diretrizes do projeto e defina o prazo de entrega.
 6. **Dispare o Processo:** Clique no botão de ação **"Distribuir com IA"**. O sistema exibirá um indicador visual de carregamento enquanto o backend consome a API. Em poucos segundos, o projeto persistido com seu quadro Kanban estruturado surgirá na tela.
 7. **Acompanhamento do projeto**: Ao clicar no projeto criado, acompanhe o andamento do mesmo observando os grupos criados, sendo possível verificar os chats com IA de cada aluno e fazer alterações nos temas e tópicos caso julgue necessário.  
 
