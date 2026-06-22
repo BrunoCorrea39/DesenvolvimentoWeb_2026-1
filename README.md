@@ -148,3 +148,6 @@ Nenhuma chave ou segredo fica versionado no repositório — todas as credenciai
 - Professor cria trabalhos com divisão de tarefas assistida por IA.
 - Aluno conversa com tutor IA dentro da tarefa.
 - Endpoints protegidos por perfil de usuário.
+
+## Link do Pitch
+https://gamma.app/docs/Pitch-ProjetAi-gc18ltj11cyf8pc?mode=doc
