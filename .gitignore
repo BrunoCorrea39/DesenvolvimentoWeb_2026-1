@@ -5,4 +5,14 @@ __pycache__/
 .env.local
 backend/projetai.db
 backend/*.db
+backend/*.db-journal
+backend/*.db-shm
+backend/*.db-wal
 backend/data/
+
+# Arquivo de credenciais de demonstracao - nao versionar
+backend/credenciais.csv
+
+# Build do frontend
+frontend/dist/
+node_modules/

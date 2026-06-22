@@ -1,16 +1,37 @@
+# Orquestra a stack local: PostgreSQL, backend FastAPI e frontend Vite.
+# O banco usa volume nomeado para persistir os dados entre execucoes.
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-projetai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-projetai}
+      POSTGRES_DB: ${POSTGRES_DB:-projetai}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-projetai} -d ${POSTGRES_DB:-projetai}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
     build:
       context: ./backend
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: sqlite:////app/data/projetai.db
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-projetai}:${POSTGRES_PASSWORD:-projetai}@db:5432/${POSTGRES_DB:-projetai}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-troque-esta-chave-em-producao}
+      FRONTEND_ORIGINS: ${FRONTEND_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-4-5}
       ANTHROPIC_VERSION: ${ANTHROPIC_VERSION:-2023-06-01}
-    volumes:
-      - ./backend/data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
 
   frontend:
     build:
@@ -21,3 +42,6 @@ services:
       VITE_API_URL: http://127.0.0.1:8000/api
     depends_on:
       - backend
+
+volumes:
+  postgres_data:

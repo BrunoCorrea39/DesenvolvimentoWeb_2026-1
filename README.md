@@ -6,7 +6,7 @@ Sistema web para apoiar professores e estudantes na gestão de trabalhos escolar
 
 - Frontend: React + Vite + Tailwind CSS
 - Backend: FastAPI + SQLModel
-- Banco de dados: SQLite
+- Banco de dados: PostgreSQL (Docker/produção); SQLite como fallback em dev local
 - Autenticação: JWT
 - IA: serviço de tutoria e divisão de tarefas com resposta assistida no backend
 
@@ -19,16 +19,21 @@ Sistema web para apoiar professores e estudantes na gestão de trabalhos escolar
 
 ## Rodar com Docker
 
-Essa é a forma recomendada, porque o projeto roda com Python 3.12 no container e evita problemas com Python 3.14 local.
+Essa é a forma recomendada: o `docker compose` sobe PostgreSQL, backend e frontend juntos, com Python 3.12 no container.
 
-Se for usar Claude API, crie um arquivo `.env` na raiz do projeto, junto de `docker-compose.yml`:
+Crie um arquivo `.env` na raiz do projeto, junto de `docker-compose.yml` (veja `backend/.env.example`):
 
 ```env
+POSTGRES_USER=projetai
+POSTGRES_PASSWORD=projetai
+POSTGRES_DB=projetai
+JWT_SECRET_KEY=uma-chave-secreta-forte
+FRONTEND_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ANTHROPIC_API_KEY=sua-chave-da-claude-api
 ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
-Depois rode:
+O backend conecta no Postgres via `DATABASE_URL` já configurada no `docker-compose.yml`. Depois rode:
 
 ```powershell
 docker compose up --build
@@ -48,7 +53,7 @@ Para parar:
 docker compose down
 ```
 
-Para apagar o banco SQLite criado no volume e recomeçar com os dados iniciais:
+Para apagar o banco Postgres (volume `postgres_data`) e recomeçar com os dados iniciais:
 
 ```powershell
 docker compose down --volumes
@@ -76,7 +81,11 @@ Documentação automática:
 http://127.0.0.1:8000/docs
 ```
 
-O banco SQLite é criado automaticamente em `backend/projetai.db` com dados iniciais.
+Sem a variável `DATABASE_URL`, o backend usa SQLite como fallback, criando `backend/projetai.db` automaticamente com dados iniciais. Para apontar para um Postgres local, defina:
+
+```powershell
+$env:DATABASE_URL="postgresql+psycopg://projetai:projetai@localhost:5432/projetai"
+```
 
 ### Claude API
 
@@ -112,11 +121,30 @@ Se a API estiver em outra URL, crie `frontend/.env.local`:
 VITE_API_URL=http://127.0.0.1:8000/api
 ```
 
+## Deploy (produção)
+
+Arquitetura: **frontend na Vercel** e **backend + PostgreSQL em um host que roda containers** (Railway, Render ou Fly.io). A Vercel é serverless e não roda o container do backend nem o banco.
+
+Backend (host com Docker + Postgres gerenciado):
+
+- `DATABASE_URL`: string do Postgres do provedor (formato `postgresql+psycopg://...`)
+- `JWT_SECRET_KEY`: chave secreta forte
+- `FRONTEND_ORIGINS`: URL pública do frontend na Vercel (ex.: `https://projetai.vercel.app`)
+- `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`
+
+Frontend (Vercel):
+
+- Root Directory: `frontend`
+- Framework Preset: Vite (Build `npm run build`, Output `dist`)
+- Variável `VITE_API_URL`: `https://SEU-BACKEND/api`
+
+Nenhuma chave ou segredo fica versionado no repositório — todas as credenciais são lidas de variáveis de ambiente.
+
 ## Funcionalidades da Sprint 3
 
 - Login real com JWT.
 - Projetos carregados da API em vez de mock local.
-- Persistência de tarefas, status, responsáveis, notas e solicitações em SQLite.
+- Persistência de tarefas, status, responsáveis, notas e solicitações em banco de dados.
 - Professor cria trabalhos com divisão de tarefas assistida por IA.
 - Aluno conversa com tutor IA dentro da tarefa.
 - Endpoints protegidos por perfil de usuário.
