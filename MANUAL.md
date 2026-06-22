@@ -44,7 +44,7 @@ TURMA - **a** ou **b**.
 ### Etapas concretas para execução da tarefa:
 1. **Selecione o Projeto:** Faça o login com o perfil de Aluno. Na listagem inicial de projetos, clique sobre o card do trabalho desejado para expandir o quadro Kanban.
 2. **Movimente o Progresso:** Cada tarefa representa uma entrega específica. Para alterar o status de uma atividade, clique nos botões de transição (`⇄`) localizados no canto inferior do card. A tarefa se moverá instantaneamente entre as colunas (**A Fazer**, **Em Andamento** e **Concluído**), atualizando as informações no banco de dados.
-3. **Acione o Tutor Socrático (IA):**
+3. **Acione o Tutor (IA):**
    * Clique sobre a tarefa em que possui dúvidas para abrir o painel lateral de ajuda contextualizada.
    * Digite seu questionamento diretamente no campo de texto do chat (Ex: *“O que foi a máquina a vapor?”*).
    * **Comportamento do Sistema:** Em alinhamento às boas práticas pedagógicas, a IA atuará como um guia. Ela **nunca** fornecerá respostas prontas para copiar e colar; em vez disso, devolverá perguntas reflexivas que instigam o usuário a formular o conhecimento por conta própria.
