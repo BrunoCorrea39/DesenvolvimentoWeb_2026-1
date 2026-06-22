@@ -410,6 +410,115 @@ def _fallback_ai_tasks(
     return tasks
 
 
+def generate_ai_group_plan(
+    title: str,
+    content: str,
+    groups_members: list[list[str]],
+    class_name: str = "",
+    prazo: str | None = None,
+) -> list[dict]:
+    """Define um recorte distinto por grupo e uma pergunta direcionada por
+    integrante. Retorna lista alinhada a groups_members:
+    [{"subtema": str, "tarefas": list[Task]}]."""
+    deadline = _format_deadline(prazo)
+    label, instrucao, _ = _class_complexity(class_name)
+    total_alunos = sum(len(members) for members in groups_members)
+    composicao = "; ".join(
+        f"Grupo {index}: {len(members)} integrante(s)"
+        for index, members in enumerate(groups_members, start=1)
+    )
+
+    claude_response = call_claude(
+        system_prompt=(
+            "Você é um professor que planeja um trabalho escolar em grupo. "
+            "Para CADA grupo, escolha um RECORTE distinto e específico do tema, sem repetir "
+            "recorte entre grupos, coerente com as diretrizes. Dentro de cada grupo, crie uma "
+            "pergunta de pesquisa DIRECIONADA e específica para cada integrante, todas sobre o "
+            "recorte daquele grupo, ordenadas do conceito mais básico ao mais aplicado; a última "
+            "deve ser uma reflexão ou proposta de solução. Cada pergunta deve ser autoexplicativa "
+            "e citar o recorte (ex.: 'O que é o Cerrado e quem habita esse bioma?'). "
+            "Adapte profundidade e vocabulário ao público-alvo e ao nível indicados. "
+            "Retorne apenas JSON válido, sem markdown, no formato "
+            "[{\"subtema\":\"...\",\"tarefas\":[{\"titulo\":\"...\",\"descricao\":\"...\"}]}]."
+        ),
+        user_prompt=(
+            f"Tema: {title}\n"
+            f"Diretrizes: {content}\n"
+            f"Público-alvo: {label}\n"
+            f"Nível de complexidade: {instrucao}\n"
+            f"Quantidade de grupos: {len(groups_members)}\n"
+            f"Composição (gere exatamente esta quantidade de tarefas por grupo): {composicao}\n"
+            "Cada grupo recebe um recorte diferente e uma pergunta por integrante."
+        ),
+        max_tokens=min(4096, 400 + 130 * total_alunos),
+    )
+
+    if claude_response:
+        plan = _parse_group_plan(claude_response, groups_members, deadline)
+        if plan:
+            return plan
+
+    return _fallback_ai_group_plan(title, content, groups_members, class_name, deadline)
+
+
+def _parse_group_plan(
+    raw: str,
+    groups_members: list[list[str]],
+    deadline: str,
+) -> list[dict] | None:
+    try:
+        parsed = json.loads(_extract_json_array(raw))
+    except (JSONDecodeError, TypeError):
+        return None
+    if not isinstance(parsed, list) or len(parsed) < len(groups_members):
+        return None
+
+    plan: list[dict] = []
+    for index, members in enumerate(groups_members):
+        bloco = parsed[index]
+        if not isinstance(bloco, dict):
+            return None
+        itens = bloco.get("tarefas") or []
+        if not isinstance(itens, list) or len(itens) < len(members):
+            return None
+        subtema = (bloco.get("subtema") or "").strip() or f"Recorte {index + 1}"
+        tarefas: list[Task] = []
+        for member, item in zip(members, itens):
+            if not isinstance(item, dict):
+                return None
+            titulo = (item.get("titulo") or "").strip()
+            if not titulo:
+                return None
+            tarefas.append(
+                Task(
+                    title=titulo,
+                    description=(item.get("descricao") or titulo).strip(),
+                    responsible=member,
+                    status="A Fazer",
+                    deadline=deadline,
+                )
+            )
+        plan.append({"subtema": subtema, "tarefas": tarefas})
+    return plan
+
+
+def _fallback_ai_group_plan(
+    title: str,
+    content: str,
+    groups_members: list[list[str]],
+    class_name: str = "",
+    deadline: str = "A combinar",
+) -> list[dict]:
+    plan: list[dict] = []
+    for index, members in enumerate(groups_members, start=1):
+        subtema = f"Recorte {index}"
+        tarefas = _fallback_ai_tasks(title, content, members, class_name, deadline)
+        for task in tarefas:
+            task.title = f"[{subtema}] {task.title}"
+        plan.append({"subtema": subtema, "tarefas": tarefas})
+    return plan
+
+
 SEED_PASSWORD = "123456"
 
 CLASSES = [

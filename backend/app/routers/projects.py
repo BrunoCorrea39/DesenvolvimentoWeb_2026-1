@@ -20,7 +20,7 @@ from ..schemas import (
 from ..services import (
     STATUS_CYCLE,
     class_name_matches,
-    generate_ai_tasks,
+    generate_ai_group_plan,
     generate_tutor_response,
     generated_group_id,
     json_to_members,
@@ -141,6 +141,13 @@ def create_project_with_ai(
 
     number_of_groups = max(1, min(payload.numeroGrupos, len(class_students)))
     groups_members = draw_groups(class_students, number_of_groups)
+    plan = generate_ai_group_plan(
+        payload.titulo,
+        payload.conteudo,
+        groups_members,
+        payload.turmaId,
+        payload.prazo,
+    )
 
     project = Project(
         class_id=payload.turmaId,
@@ -155,20 +162,19 @@ def create_project_with_ai(
     session.refresh(project)
     project_id = project.id
 
-    for index, members in enumerate(groups_members, start=1):
+    for index, (members, bloco) in enumerate(zip(groups_members, plan), start=1):
         group_id = generated_group_id()
         session.add(
             Group(
                 id=group_id,
                 project_id=project_id,
-                name=f"Grupo {index} - Sorteado por IA",
+                name=f"Grupo {index} - {bloco['subtema']}",
                 members_json=members_to_json(members),
                 progress=0,
             )
         )
 
-        tasks = generate_ai_tasks(payload.titulo, payload.conteudo, members, payload.turmaId, payload.prazo)
-        for task in tasks:
+        for task in bloco["tarefas"]:
             task.group_id = group_id
             session.add(task)
 
