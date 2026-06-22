@@ -432,13 +432,17 @@ def generate_ai_group_plan(
         system_prompt=(
             "Você é um professor que planeja um trabalho escolar em grupo. "
             "Para CADA grupo, escolha um RECORTE distinto e específico do tema, sem repetir "
-            "recorte entre grupos, coerente com as diretrizes. Dentro de cada grupo, crie uma "
-            "pergunta de pesquisa DIRECIONADA e específica para cada integrante, todas sobre o "
-            "recorte daquele grupo, ordenadas do conceito mais básico ao mais aplicado; a última "
-            "deve ser uma reflexão ou proposta de solução. Cada pergunta deve ser autoexplicativa "
-            "e citar o recorte (ex.: 'O que é o Cerrado e quem habita esse bioma?'). "
-            "Adapte profundidade e vocabulário ao público-alvo e ao nível indicados. "
-            "Retorne apenas JSON válido, sem markdown, no formato "
+            "recorte entre grupos, coerente com as diretrizes. Dentro de cada grupo, gere uma "
+            "atribuição DIRECIONADA por integrante, todas sobre o recorte daquele grupo, "
+            "ordenadas do conceito mais básico ao mais aplicado; a última deve ser uma reflexão "
+            "ou proposta de solução. Para cada integrante produza dois campos: \"titulo\" = um "
+            "título curto (3 a 8 palavras) que nomeia o subtema/aspecto investigado, citando o "
+            "recorte (ex.: 'Floresta Amazônica: características geográficas'); \"descricao\" = a "
+            "pergunta de pesquisa completa e autoexplicativa que o aluno deve responder (ex.: "
+            "'O que é a Floresta Amazônica e quais são suas principais características "
+            "geográficas (clima, vegetação, localização no Brasil)?'). O titulo e a descricao "
+            "não devem ser iguais. Adapte profundidade e vocabulário ao público-alvo e ao nível "
+            "indicados. Retorne apenas JSON válido, sem markdown, no formato "
             "[{\"subtema\":\"...\",\"tarefas\":[{\"titulo\":\"...\",\"descricao\":\"...\"}]}]."
         ),
         user_prompt=(
@@ -448,7 +452,7 @@ def generate_ai_group_plan(
             f"Nível de complexidade: {instrucao}\n"
             f"Quantidade de grupos: {len(groups_members)}\n"
             f"Composição (gere exatamente esta quantidade de tarefas por grupo): {composicao}\n"
-            "Cada grupo recebe um recorte diferente e uma pergunta por integrante."
+            "Cada grupo recebe um recorte diferente; cada integrante recebe um titulo curto e uma pergunta completa."
         ),
         max_tokens=min(4096, 400 + 130 * total_alunos),
     )

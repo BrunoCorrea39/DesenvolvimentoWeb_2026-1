@@ -30,6 +30,17 @@ export default function TeacherWorksView({
 
   return (
     <div>
+      {carregandoIA && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl px-8 py-7 max-w-sm w-[90%] text-center shadow-2xl">
+            <div className="mx-auto mb-4 h-12 w-12 rounded-full border-4 border-slate-700 border-t-purple-500 animate-spin" />
+            <h4 className="text-base font-bold text-slate-100 mb-1">Distribuindo com IA…</h4>
+            <p className="text-sm text-slate-400">
+              A IA está montando os grupos e gerando as tarefas direcionadas. Isso pode levar alguns segundos.
+            </p>
+          </div>
+        </div>
+      )}
       <BackButton onClick={onBack} accent="purple">← Voltar</BackButton>
       <h3 className="text-xl font-bold mb-6">
         Trabalhos em: <span className="text-purple-400">{turmaSelecionada.nome}</span>

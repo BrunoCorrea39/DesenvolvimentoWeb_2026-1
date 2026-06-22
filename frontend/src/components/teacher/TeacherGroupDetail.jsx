@@ -58,6 +58,11 @@ export default function TeacherGroupDetail({
                       </button>
                     )}
                   </div>
+                  {tarefa.descricao && tarefa.descricao !== tarefa.titulo && (
+                    <div className="mt-2 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-400 max-w-xl">
+                      {tarefa.descricao}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
