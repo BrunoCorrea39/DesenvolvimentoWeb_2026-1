@@ -33,8 +33,9 @@ export default function TeacherGroupDetail({
             {grupo.tarefas.map((tarefa) => (
               <div
                 key={tarefa.id}
-                className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col gap-3"
               >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h5 className="font-bold text-sm text-slate-200">{tarefa.titulo}</h5>
                   <div className="flex gap-4 text-xs text-slate-500 mt-1">
@@ -58,11 +59,6 @@ export default function TeacherGroupDetail({
                       </button>
                     )}
                   </div>
-                  {tarefa.descricao && tarefa.descricao !== tarefa.titulo && (
-                    <div className="mt-2 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-400 max-w-xl">
-                      {tarefa.descricao}
-                    </div>
-                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -92,6 +88,12 @@ export default function TeacherGroupDetail({
                     Excluir
                   </button>
                 </div>
+                </div>
+                {tarefa.descricao && tarefa.descricao !== tarefa.titulo && (
+                  <div className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-400">
+                    {tarefa.descricao}
+                  </div>
+                )}
               </div>
             ))}
           </div>

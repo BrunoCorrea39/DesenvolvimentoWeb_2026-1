@@ -517,8 +517,6 @@ def _fallback_ai_group_plan(
     for index, members in enumerate(groups_members, start=1):
         subtema = f"Recorte {index}"
         tarefas = _fallback_ai_tasks(title, content, members, class_name, deadline)
-        for task in tarefas:
-            task.title = f"[{subtema}] {task.title}"
         plan.append({"subtema": subtema, "tarefas": tarefas})
     return plan
 

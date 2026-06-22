@@ -187,7 +187,7 @@ def create_project_with_ai(
             Group(
                 id=group_id,
                 project_id=project_id,
-                name=f"Grupo {index} - {bloco['subtema']}",
+                name=f"Grupo {index}",
                 members_json=members_to_json(members),
                 progress=0,
             )
