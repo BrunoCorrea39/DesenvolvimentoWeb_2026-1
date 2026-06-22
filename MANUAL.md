@@ -8,7 +8,7 @@
 
 Este guia prático foi desenvolvido seguindo princípios de Interação Humano-Computador para garantir uma documentação concisa, de fácil pesquisa e estritamente focada nas tarefas concretas do usuário. 
 
-O **ProjetAí** é uma plataforma que integra gerenciamento de projetos escolares (via quadros Kanban) a um sistema de tutoria socrática assistido por Inteligência Artificial, eliminando a discrepância entre a expectativa de design e a experiência real de uso.
+O **ProjetAí** é uma plataforma que integra gerenciamento de projetos escolares (via quadros Kanban) a um sistema de tutoria assistido por Inteligência Artificial, eliminando a discrepância entre a expectativa de design e a experiência real de uso.
 
 ---
 
@@ -20,6 +20,7 @@ Para realizar consultas pontuais e testes imediatos no ambiente de homologação
 | :--- | :--- | :--- |
 | **Professor** | `professor@escola.com` | `123456` |
 | **Aluno** | `aluno(XX)(TURMA)@escola.com` | `123456` |
+
 XX - Número do aluno (de 01 a 20).
 TURMA - **a** ou **b**.
 
