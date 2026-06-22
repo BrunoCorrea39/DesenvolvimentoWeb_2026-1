@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
 from ..auth import get_current_user, require_professor
+from ..config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
 from ..database import get_session
 from ..models import ChatMessage, Group, Project, Task, TaskRequest, User
 from ..schemas import (
@@ -18,6 +19,7 @@ from ..schemas import (
     TaskUpdate,
 )
 from ..services import (
+    call_claude,
     STATUS_CYCLE,
     class_name_matches,
     generate_ai_group_plan,
@@ -31,6 +33,23 @@ from ..services import (
 
 
 router = APIRouter(prefix="/projects", tags=["projects"])
+
+
+@router.get("/ai/status")
+def ai_status(
+    ping: bool = False,
+    _: User = Depends(require_professor),
+) -> dict:
+    info: dict = {
+        "key_configured": bool(ANTHROPIC_API_KEY),
+        "model": ANTHROPIC_MODEL,
+        "mode": "ia" if ANTHROPIC_API_KEY else "fallback",
+    }
+    if ping and ANTHROPIC_API_KEY:
+        resposta = call_claude("Responda apenas com a palavra: ok", "ok", max_tokens=5)
+        info["live"] = bool(resposta)
+        info["sample"] = (resposta or "")[:60]
+    return info
 
 
 @router.get("")
