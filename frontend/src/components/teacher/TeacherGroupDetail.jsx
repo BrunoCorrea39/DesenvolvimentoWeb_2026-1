@@ -187,7 +187,7 @@ export default function TeacherGroupDetail({
           onClick={() => onEspiarChat(null)}
         >
           <div
-            className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[80vh]"
+            className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col h-[85vh]"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="p-4 bg-slate-950 border-b border-slate-800 rounded-t-2xl flex items-center justify-between">
