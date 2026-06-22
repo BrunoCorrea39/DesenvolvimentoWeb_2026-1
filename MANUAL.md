@@ -30,11 +30,14 @@ TURMA - **a** ou **b**.
 ## 👨‍🏫 2. Painel do Professor: Criando Projetos com IA
 *Fluxo focado na decomposição automatizada de escopo pedagógico pelo docente.*
 
-### Etapas concretas para execução da tarefa:
+### Etapas para execução da tarefa:
 1. **Acesse a interface:** Na tela de login, insira o e-mail de professor e a senha. O sistema habilitará o botão "Entrar" automaticamente assim que os campos forem preenchidos.
-2. **Abra o Gerador:** Na dashboard principal, clique no botão contextualizado **"Novo Trabalho com IA"**.
-3. **Defina os Parâmetros:** No formulário que surgir, preencha o campo **Tema/Título** (Ex: *“Impactos da Revolução Industrial”*) e estipule a quantidade de **Alunos por grupo**.
-4. **Dispare o Processo:** Clique no botão de ação **"Gerar com IA"**. O sistema exibirá um indicador visual de carregamento enquanto o backend consome a API. Em poucos segundos, o projeto persistido com seu quadro Kanban estruturado surgirá na tela.
+2. **Escolha a série e turma desejada**: Na dashboard haverá as séries (8º, 9º ano, etc) e dentro das séries as turmas geridas pelo professor (9º ano A, 9º an0 B, etc). Selecione a turma desejada.
+3. **Acompanhamento da turma**: Dentro da turma será possível vizualizar os alunos matriculados e os projetos já em andamento.  
+4. **Gerar trabalho:** Na dashboard da turma, do lado esquerdo, está o campo para iniciar um novo projeto.
+5. **Defina os Parâmetros:** No formulário , preencha o campo **Tema/Título** (Ex: *“Impactos da Revolução Industrial”*), estipule a quantidade de **Alunos por grupo**, dê as diretrizes do projeto e defina o prazo de entrega.
+6. **Dispare o Processo:** Clique no botão de ação **"Distribuir com IA"**. O sistema exibirá um indicador visual de carregamento enquanto o backend consome a API. Em poucos segundos, o projeto persistido com seu quadro Kanban estruturado surgirá na tela.
+7. **Acompanhamento do projeto**: Ao clicar no projeto criado, acompanhe o andamento do mesmo observando os grupos criados, sendo possível verificar os chats com IA de cada aluno e fazer alterações nos temas e tópicos caso julgue necessário.  
 
 ---
 
@@ -48,6 +51,8 @@ TURMA - **a** ou **b**.
    * Clique sobre a tarefa em que possui dúvidas para abrir o painel lateral de ajuda contextualizada.
    * Digite seu questionamento diretamente no campo de texto do chat (Ex: *“O que foi a máquina a vapor?”*).
    * **Comportamento do Sistema:** Em alinhamento às boas práticas pedagógicas, a IA atuará como um guia. Ela **nunca** fornecerá respostas prontas para copiar e colar; em vez disso, devolverá perguntas reflexivas que instigam o usuário a formular o conhecimento por conta própria.
+  
+4. **Acidione uma tarefa (opicional)**: Caso o aluno deseje adicionar ou alterar uma tarefa e/ou tópico ao projeto, ele pode solicitar ao professor. Clique no cando superior direito em 'Solicitar nova tarefa'. Insira o título da tarefa, explique o que será feito nela, indique um dos alunos do grupo para ser o responsável por ela e envie o pedido. O professor receberá o pedido e caso aceite a nova tarefa irá aparecer na dashboard.  
 
 ---
 
