@@ -182,33 +182,52 @@ export default function TeacherGroupDetail({
       </div>
 
       {tarefaChatEspiado && (
-        <div className="mt-6 bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow">
-          <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800">
-            <h5 className="text-xs font-bold text-teal-400">Chat de: {tarefaChatEspiado.responsavel}</h5>
-            <button
-              type="button"
-              onClick={() => onEspiarChat(null)}
-              className="text-xs font-semibold text-slate-400 hover:text-slate-200"
-            >
-              Fechar
-            </button>
-          </div>
-          <div className="max-h-[260px] overflow-y-auto space-y-1.5 text-xs">
-            {tarefaChatEspiado.chatHistory?.map((mensagem) => (
-              <div
-                key={mensagem.id}
-                className={`p-2 rounded border ${
-                  mensagem.sender === 'aluno'
-                    ? 'bg-teal-500/10 border-teal-500/30'
-                    : 'bg-slate-950 border-slate-800'
-                }`}
-              >
-                <strong className={mensagem.sender === 'aluno' ? 'text-teal-400' : 'text-purple-400'}>
-                  {mensagem.sender}:{' '}
-                </strong>
-                {mensagem.text}
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4"
+          onClick={() => onEspiarChat(null)}
+        >
+          <div
+            className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[80vh]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="p-4 bg-slate-950 border-b border-slate-800 rounded-t-2xl flex items-center justify-between">
+              <div>
+                <span className="font-bold text-xs text-slate-300">Histórico de Tutoria IA</span>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Chat de: <strong className="text-teal-400">{tarefaChatEspiado.responsavel}</strong>
+                </p>
               </div>
-            ))}
+              <button
+                type="button"
+                onClick={() => onEspiarChat(null)}
+                className="text-xs font-semibold text-slate-400 hover:text-slate-200"
+              >
+                Fechar
+              </button>
+            </div>
+            <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[160px]">
+              {(tarefaChatEspiado.chatHistory || []).map((mensagem) => (
+                <div
+                  key={mensagem.id}
+                  className={`flex ${mensagem.sender === 'aluno' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-xl px-3.5 py-2 text-xs ${
+                      mensagem.sender === 'aluno'
+                        ? 'bg-teal-500 text-black font-semibold'
+                        : 'bg-slate-950 text-slate-300 border border-slate-800'
+                    }`}
+                  >
+                    {mensagem.text}
+                  </div>
+                </div>
+              ))}
+              {(!tarefaChatEspiado.chatHistory || tarefaChatEspiado.chatHistory.length === 0) && (
+                <p className="text-xs text-slate-500 text-center py-6">
+                  Nenhuma conversa registrada nesta tarefa.
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}

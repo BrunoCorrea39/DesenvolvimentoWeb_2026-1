@@ -1,4 +1,5 @@
 import random
+import sys
 from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -20,6 +21,7 @@ from ..schemas import (
 )
 from ..services import (
     call_claude,
+    _fallback_ai_group_plan,
     STATUS_CYCLE,
     class_name_matches,
     generate_ai_group_plan,
@@ -160,13 +162,21 @@ def create_project_with_ai(
 
     number_of_groups = max(1, min(payload.numeroGrupos, len(class_students)))
     groups_members = draw_groups(class_students, number_of_groups)
-    plan = generate_ai_group_plan(
-        payload.titulo,
-        payload.conteudo,
-        groups_members,
-        payload.turmaId,
-        payload.prazo,
-    )
+    try:
+        plan = generate_ai_group_plan(
+            payload.titulo,
+            payload.conteudo,
+            groups_members,
+            payload.turmaId,
+            payload.prazo,
+        )
+    except Exception as error:
+        print(f"[ai] Falha ao gerar plano com IA, usando fallback: {error}", file=sys.stderr)
+        plan = None
+    if not plan or len(plan) != len(groups_members):
+        plan = _fallback_ai_group_plan(
+            payload.titulo, payload.conteudo, groups_members, payload.turmaId
+        )
 
     project = Project(
         class_id=payload.turmaId,
